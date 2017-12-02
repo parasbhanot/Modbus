@@ -1,0 +1,134 @@
+
+int sampleNo[20] = {
+
+ 2,   9,
+ 1,   10,
+ 14,  18,
+ 13,  5,
+ 12,  20,
+ 11,  17,
+ 8,   15,
+ 6,   3,
+ 4,   7,
+ 19,  16	
+	
+};
+
+String sampleName[20] ={
+	
+	"PeGws",
+	"jc4qr",
+	"iTdXZ",
+	"A3QWP",
+	"t3uVd",
+	"wFUHH",
+	"aX0Zu",
+	"oF8FD",
+	"m2BYd",
+	"FuRy9",
+	"N6uAS",
+	"ZwuJ3",
+	"36Ypd",
+	"S88Kk",
+	"IwJs9",
+	"pDHS2",
+	"eTiUs",
+	"DQmFy",
+	"Cas6x",
+	"MPqyL"
+	
+	
+	
+}; 
+
+int ramp[20] = {
+	
+	17,	33,
+	66,	50,
+	79,	73,
+	35,	56,
+	46,	14,
+	80,	61,
+	32,	68,
+	76,	57,
+	15,	40,
+	61,	73
+	
+	
+};
+	
+int pleatue[20] = {
+	
+	165,	137,
+	127,	152,
+	140,	143,
+	152,	110,
+	120,	171,
+	139,	111,
+	132,	177,
+	151,	108,
+	142,	168,
+	133,	181
+	
+	
+
+	
+};
+
+_Bool mode[20] = {
+	
+	0,	1,
+	0,	0,
+	1,	0,
+	1,	1,
+	1,	0,
+	1,	1,
+	1,	0,
+	0,	0,
+	1,	1,
+	0,	1
+		
+};
+
+void setup()
+{
+	Serial.begin(9600);
+	//Serial1.begin(9600);
+
+}
+
+void loop()
+{
+		
+	if ( Serial.available() > 0)
+	{
+		unsigned char buffer[] ={0};
+		Serial.readBytesUntil(3,buffer,3);
+				
+		if( buffer[1] == 'p'){
+			
+			for(int i = 0;i<20;i++){
+				
+				Serial.print(sampleNo[i]);
+				//Serial1.print(",");
+				Serial.write(29);
+				Serial.print(sampleName[i]);
+				//Serial1.print(",");
+				Serial.write(29);
+				Serial.print(mode[i]);
+				//Serial1.print(",");
+				Serial.write(29);
+				Serial.print(pleatue[i]);
+				//Serial1.print(",");
+				Serial.write(29);
+				Serial.println(ramp[i]);
+				
+				delay(100);
+				
+			}
+								
+		}
+						
+	}
+	
+}

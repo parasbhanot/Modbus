@@ -1,0 +1,19 @@
+
+	RS485_TxEnable();
+	Master_ModbusGetRequest(0x19,0x03,0x04,0x26,0x00,0x02);
+	RS485_RxEnable();
+			
+	if( HAL_UART_Receive(&huart1,rbuffer,9,500) == HAL_OK){
+				
+		//HAL_UART_Transmit(&huart2,rbuffer,9,400); // For looiking the actual packet response 
+				
+		float sendValue = modbusFloat_Parser(rbuffer);
+				
+		uint8_t sendBuffer [20] = {0};
+					
+		sprintf(sendBuffer," frequency is %f /n" ,sendValue);
+					
+		HAL_UART_Transmit(&huart2,sendBuffer,20,400);
+						
+					
+	}		
