@@ -113,15 +113,15 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 
-		 /**
+      /**
       *  The following request will return eception packet in slave in this particular slave
       */
      
 		//Modbus_master_Request_RS485(0x19,0x03,0x04,0xEC,0x00,0x02);
 		
 
-    /*
-        Working Perfectly 
+    /**
+     * Working Perfectly 
      */
 		//Modbus_master_Request_RS485(0x19,0x03,0x04,0x26,0x00,0x02); // Frequency
 
