@@ -1,7 +1,7 @@
 Modbus
 ===================
 
-Implementation of Modbus protocol using Arduino over RS485 [Full-Duplex]  and Ethernet (TCP/IP) and and Stm32 over RS485 (Half duplex with HAL driver) .
+Implementation of Modbus protocol using Arduino over RS485 [Full-Duplex]  and Ethernet (TCP/IP) and Stm32 over RS485 (Half duplex with HAL driver) .
 
 ------------------------------------
 
@@ -56,5 +56,5 @@ Useful links
 
 https://gregstoll.dyndns.org/~gregstoll/floattohex/ 
 https://www.lammertbies.nl/comm/info/crc-calculation.html 
-http://projectsfromtech.blogspot.in/2013/09/combine-2-bytes-into-int-on-arduino.html 
+http://projectsfromtech.blogspot.in/2013/09/combine-2-bytes-into-int-on-arduino.html
 https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func
