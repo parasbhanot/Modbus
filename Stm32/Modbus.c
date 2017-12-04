@@ -10,6 +10,13 @@
 #include "stm32f0xx_hal.h"
 #include "Modbus.h"
 #include <string.h>
+//__________________________________________________________________________________
+
+
+// True and Flase are not defined in Libs for unknown reasons
+
+#define True  1
+#define False 0
 
 //---------------------------------extern Variables----------------------------------
 
@@ -28,8 +35,18 @@ uint8_t rbuffer[rbufferSize];
  *  Resonse Strcture intial Values 
  */
 
+
+MbusResponse mbusResponseCode;
 ModbusFloat modbusFloat;
 
+
+//-----------------------------------------------------------------------------------
+
+//**
+//Receive Complete Flag
+//
+
+_Bool rCompleteFlag = False;
 
 //-------------------------------------------------------------------------------------
 
@@ -39,12 +56,12 @@ ModbusFloat modbusFloat;
 	@buf[] = data whose CRC is to be calculated
 	@len = length of buffer  
  */
-uint16_t ModRTU_CRC(uint8_t buf[],uint8_t size)
+uint16_t ModRTU_CRC(uint8_t buf[])
 {
 	uint16_t crc = 0xFFFF;
 	
 	
-	for (uint16_t pos = 0; pos < size; pos++) {
+	for (uint16_t pos = 0; pos < 6; pos++) {
 		crc ^= (uint16_t)buf[pos];          // XOR byte into least significant byte of crc
 		
 		for (uint16_t i = 8; i != 0; i--) {    // Loop over each bit
@@ -80,7 +97,7 @@ void Master_ModbusGetRequest(uint8_t deviceAddressP, uint8_t functionCodeP,
 	uint8_t CRCLow = 0;
 	uint8_t CRCHigh =0;
 	
-	calCRC = ModRTU_CRC(subreader,6);
+	calCRC = ModRTU_CRC(subreader);
 	
 	CRCHigh = calCRC & 0x00FF;
 	
@@ -121,20 +138,46 @@ void Modbus_master_Request_RS485(uint8_t deviceAddressP,
 
 			RS485_RxEnable();
 			
-			if( HAL_UART_Receive(&huart1,rbuffer,9,500) == HAL_OK){
+			//if( HAL_UART_Receive(&huart1,rbuffer,9,500) == HAL_OK){
 				
-					//HAL_UART_Transmit(&huart2,rbuffer,9,400); // For looiking the actual packet response 
+					//HAL_UART_Transmit(&huart2,rbuffer,9,400); // For looking the actual packet response 
 				
-				  float sendValue = modbusFloat_Parser(rbuffer);
+				  //float sendValue = modbusFloat_Parser(rbuffer);
 				
-				  uint8_t sendBuffer [20] = {0};
+				  //uint8_t sendBuffer [20] = {0};
 					
-					sprintf(sendBuffer," frequency is %f /n" ,sendValue);
+					//sprintf(sendBuffer," frequency is %f /n" ,sendValue);
+					
+					//HAL_UART_Transmit(&huart2,sendBuffer,20,400);
+					
+			
+					
+			//}
+			
+			// Exception case included 
+			switch(HAL_UART_Receive(&huart1,rbuffer,9,100)){
+			
+				case HAL_OK  : 
+					//HAL_UART_Transmit(&huart2, rbuffer,9,100); //  For looking the actual packet response
+				
+					float sendValue = modbusFloat_Parser(rbuffer);
+				
+					uint8_t sendBuffer [20] = {0};
+					
+					sprintf(sendBuffer," param value is %f /n" ,sendValue);
 					
 					HAL_UART_Transmit(&huart2,sendBuffer,20,400);
-					
-					
-			}
+												
+					break;
+			
+				case HAL_TIMEOUT : 
+					//HAL_UART_Transmit(&huart2, rbuffer,5,100);
+														
+					HAL_UART_Transmit(&huart2,(uint8_t*)"Exception occurred",18,100);
+														
+					break;
+			
+		}
 
 
 }// Modbus_master_Request_RS485 end 
@@ -174,7 +217,7 @@ float modbusFloat_Parser(uint8_t dataArray[]){
     //cout << "0x" <<hex<<cb <<endl;
 
 
-   	modbusFloat.modbus_integer_Float = cb;
+   modbusFloat.modbus_integer_Float = cb;
 
     return modbusFloat.modbus_parsed_Float;
 
