@@ -56,12 +56,12 @@ _Bool rCompleteFlag = False;
 	@buf[] = data whose CRC is to be calculated
 	@len = length of buffer  
  */
-uint16_t ModRTU_CRC(uint8_t buf[])
+uint16_t ModRTU_CRC(uint8_t buf[],uint8_t size)
 {
 	uint16_t crc = 0xFFFF;
 	
 	
-	for (uint16_t pos = 0; pos < 6; pos++) {
+	for (uint16_t pos = 0; pos < size; pos++) {
 		crc ^= (uint16_t)buf[pos];          // XOR byte into least significant byte of crc
 		
 		for (uint16_t i = 8; i != 0; i--) {    // Loop over each bit
@@ -97,7 +97,7 @@ void Master_ModbusGetRequest(uint8_t deviceAddressP, uint8_t functionCodeP,
 	uint8_t CRCLow = 0;
 	uint8_t CRCHigh =0;
 	
-	calCRC = ModRTU_CRC(subreader);
+	calCRC = ModRTU_CRC(subreader,6);
 	
 	CRCHigh = calCRC & 0x00FF;
 	
